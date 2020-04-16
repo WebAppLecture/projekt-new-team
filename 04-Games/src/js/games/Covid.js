@@ -15,6 +15,8 @@ export class Covid extends GameTemplate {
         // to do: Bug fixing
         // to do: Methoden richtig einteilen
         // to do: Allgemein: Aufräumen
+        // to do: for --
+        // to do: Enemy types
         this.gameOver = false;
         //this.playerSpeed = 5;
         //ctx.canvas.height;
@@ -31,15 +33,14 @@ export class Covid extends GameTemplate {
         this.stones = [];
         this.walls = [];
         this.enemies = [];
-        this.enemies.push(new Enemy(50, 250, this.player, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
-        this.enemies.push(new Enemy(350, 250, this.player, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
-        this.enemies.push(new Enemy(200, 50, this.player, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
-        this.enemies.push(new Enemy(200, 550, this.player, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
+        this.maps = [];
         this.points = 0;
         this.lives = 5;
         this.spawnIntervalStones = 0;
         this.spawnIntervalBullets = 0;
         this.bulletId = 0;
+        this.wallsSize = 50;
+        this.spawnEnemy();
         this.buildMap();
         //this.player.addEventListener("mousedown", event => this.shoot(event));
         //this.screen =  
@@ -71,6 +72,7 @@ export class Covid extends GameTemplate {
         }
         if(this.enemies.length === 0)
         {
+            this.spawnEnemy();
             this.buildMap();
         }
         //console.log(this.findQuadrant(315,209)[0]);
@@ -181,7 +183,7 @@ export class Covid extends GameTemplate {
 
     checkWalls() //besser Obstacles -> Kugelhitboxen
     {
-        let playerQuadr = this.findQuadrant(this.player.x + 0, this.player.y + 0, 40);
+        let playerQuadr = this.findQuadrant(this.player.x, this.player.y, 40);
         for(let i = 0; i < this.walls.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente
         {
             let dx = this.player.x - this.walls[i].x;
@@ -194,31 +196,31 @@ export class Covid extends GameTemplate {
                 // Problem: Wenn collision dann wird erst das oberste überprüft alternativ: vx und vy >< 0
                 // Nicht alle Bedingung nötig
                 // < || <=
-                // to o : add pitch 
+                // to do : add pitch 
                 console.log(pitch)
                 //console.log(this.walls[index].x + 40)
-                if(playerQuadr[0] > wallQuadr[0])  //this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
+                if(playerQuadr[0] > wallQuadr[0] )// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
                 {
                     //right
                     let yRight = this.player.y;
                     console.log("right");
                     //console.log(this.player.x)
                     //console.log(this.walls[index].x)
-                    this.player.x = this.walls[index].x + 40;
+                    this.player.x = this.walls[index].x + 50;
                 }
-                else if(this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
+                else if(playerQuadr[0] < wallQuadr[0] )// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
                 {
                     //left
                     console.log("left");
                     this.player.x = this.walls[index].x - 30;
                 }
-                else if(this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
+                else if(playerQuadr[1] > wallQuadr[1] )// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
                 {
                     //under
                     console.log("under");
-                    this.player.y = this.walls[index].y + 40;
+                    this.player.y = this.walls[index].y + 50;
                 }
-                else if(this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
+                else if(playerQuadr[1] < wallQuadr[1]  )// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
                 {
                     //over
                     console.log("over");
@@ -240,6 +242,7 @@ export class Covid extends GameTemplate {
     
     checkEnemies(ctx)
     {
+        let set = false;
         for(let i = 0; i < this.enemies.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
         {
             this.enemies[i].update(ctx);
@@ -255,8 +258,17 @@ export class Covid extends GameTemplate {
                 let scale1 = Math.sqrt(this.enemies[i].vx * this.enemies[i].vx + this.enemies[i].vy * this.enemies[i].vy);
                 let scale2 = Math.sqrt(this.enemies[j].vx * this.enemies[j].vx + this.enemies[j].vy * this.enemies[j].vy);
                 let scale = Math.sqrt(dx * dx + dy * dy);
-                if(i != j && Enemy.criclecricleCollision(this.enemies[i], this.enemies[j])) { // warum nicht while
+                if(i != j && Enemy.criclecricleCollision(this.enemies[i], this.enemies[j]) && set === false) { // warum nicht while
                     console.log("Treffer");
+                    set = true;
+                    x1 = this.enemies[i].x;
+                    y1 = this.enemies[i].y;
+                    x2 = this.enemies[j].x;
+                    y2 = this.enemies[j].y;
+                    this.enemies[i].vx = 0;
+                    this.enemies[i].vy = 0;
+                    this.enemies[j].vx = 0;
+                    this.enemies[j].vy = 0;
                     //this.enemies[i].vx = -this.enemies[i].vx;
                     /*this.enemies[i].vx = this.enemies[i].vx;
                     this.enemies[i].vy = -this.enemies[i].vy;
@@ -278,6 +290,10 @@ export class Covid extends GameTemplate {
                     y1 = this.enemies[i].y;
                     x2 = this.enemies[j].x;
                     y2 = this.enemies[j].y;*/
+                }
+                if(i != j && !Enemy.criclecricleCollision(this.enemies[i], this.enemies[j]))
+                {
+                    set = false;
                 }
                 //console.log(Enemy.criclecricleCollision(this.enemies[i], this.enemies[j]));
             }
@@ -313,13 +329,98 @@ export class Covid extends GameTemplate {
 
     buildMap() 
     {
-        //this.walls.splice(i, this.walls.length);
+        this.walls.splice(0, this.walls.length);
+        let wallPostition = [];
         let map = Math.round(Math.random() * 5);
-        //let map 1 = 
-        let wallPostition = [[50,50], [50,410], [310,50], [310,410]];
-        for(let i = 0; i < wallPostition.length; i++)
+        // 0 -> No Obstacle | 1 -> Obstacle
+        this.maps[0] = [0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0,       
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0]
+        this.maps[1] = [0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0,       
+                        0, 0, 1, 0, 0, 1, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 1, 0, 0, 1, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0]
+        this.maps[2] = [0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0,       
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 1, 1, 0, 0, 0,  
+                        0, 0, 0, 1, 1, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0]
+        this.maps[3] = [0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0,       
+                        0, 1, 0, 0, 0, 0, 1, 0,  
+                        0, 1, 1, 0, 0, 1, 1, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 1, 1, 0, 0, 1, 1, 0,  
+                        0, 1, 0, 0, 0, 0, 1, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0]
+        this.maps[4] = [0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0,       
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 1, 0, 1, 1, 0, 1, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
+                        0, 1, 0, 1, 1, 0, 1, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 0, 0, 0, 0, 1, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0]
+        this.maps[5] = [0, 0, 0, 0, 0, 0, 0, 0, 
+                        0, 1, 1, 0, 0, 1, 1, 0,       
+                        0, 1, 0, 0, 0, 0, 1, 0,  
+                        0, 0, 0, 1, 1, 0, 0, 0,  
+                        0, 0, 1, 1, 1, 1, 0, 0,  
+                        0, 0, 1, 1, 1, 1, 0, 0,  
+                        0, 0, 0, 1, 1, 0, 0, 0,  
+                        0, 1, 0, 0, 0, 0, 1, 0, 
+                        0, 1, 1, 0, 0, 1, 1, 0, 
+                        0, 0, 0, 0, 0, 0, 0, 0]
+                         
+        let mapWidth = this.canvas.width / this.wallsSize;
+        for(let i = 0; i < this.maps[map].length; i++)
         {
-            this.walls.push(new StrokedObject(wallPostition[i][0],  wallPostition[i][1], 50, 50, "#6bd26b", 5));
+            let yPos = 0;
+            let xPos = 0;
+            if(this.maps[map][i] != 0)
+            {
+                yPos = Math.floor(i / mapWidth);
+                xPos = i - (yPos * mapWidth);
+                /*if(this.player.x - this.wallsSize <= xPos)
+                {
+                    this.player.x = this.player.x + 50;
+                }
+                if(this.player.y - this.wallsSize <= yPos)
+                {
+                    this.player.y = this.player.y + 50;
+                }*/
+                /*console.log(i);
+                console.log(xPos);
+                console.log(yPos);*/
+                wallPostition.push([this.wallsSize*xPos, this.wallsSize*yPos]);
+            }
+        }
+        //let wallPostition = [[50,50], [50,410], [310,50], [310,410]];
+        for(let j = 0; j < wallPostition.length; j++)
+        {
+            this.walls.push(new StrokedObject(wallPostition[j][0],  wallPostition[j][1], this.wallsSize, this.wallsSize, "#6bd26b", 5));
             //console.log(wallPostition[i][0]);
             //this.food = new StrokedObject(50, 50, 25, 25, "#6bd26b", 5);
         }
@@ -327,7 +428,10 @@ export class Covid extends GameTemplate {
 
     spawnEnemy()
     {
-        
+        this.enemies.push(new Enemy(50, 250, this.player, 1,"6bd26b", 15, 0, 2 * Math.PI, false, 1));
+        this.enemies.push(new Enemy(350, 250, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
+        this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
+        this.enemies.push(new Enemy(200, 550, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
     }
 
     drawPoints(ctx) {
@@ -344,9 +448,9 @@ export class Covid extends GameTemplate {
         super.gameOverScreen(ctx);
     }
 
-    findQuadrant(x, y, quadrantScale) {
-        let xQuadr = Math.ceil(x / quadrantScale); // oder +1 da bei 0 anfängt
-        let yQuadr = Math.ceil(y / quadrantScale);
+    findQuadrant(x, y, quadrantSice) {
+        let xQuadr = Math.ceil(x / quadrantSice); // oder +1 da bei 0 anfängt
+        let yQuadr = Math.ceil(y / quadrantSice);
         return [xQuadr, yQuadr];
     }
 

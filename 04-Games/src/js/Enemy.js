@@ -2,7 +2,7 @@ import { GameObject } from "./GameObject.js"
 
 export class Enemy {
 
-    constructor(x, y, target, color, radius, startAngle, endAngle, anticlockwise, speed, lives) {
+    constructor(x, y, target, type, color, radius, startAngle, endAngle, anticlockwise, speed, lives) {
         //super (x, y, 0, 0, color);
         //super(x, y, 0, 0, color);
         this.x = x;
@@ -10,6 +10,7 @@ export class Enemy {
         this.vx = 0;
         this.vy = 0;
         this.target = target;
+        this.type = type;
         this.color = color;
         this.radius = radius;
         this.startAngle = startAngle;
@@ -39,8 +40,8 @@ export class Enemy {
             let scale = Math.sqrt(dx * dx + dy * dy);
             this.vx = (dx / scale) * this.speed;
             this.vy = (dy / scale) * this.speed;
-            this.x += this.vx;
-            this.y += this.vy;
+            this.x += this.x;
+            this.y += this.y;
         //}
     }
 
@@ -64,7 +65,7 @@ export class Enemy {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, this.radius, this.startAngle, this.endAngle, this.anticlockwise)
         ctx.fillStyle = this.color;
-        ctx.lineWidth = 5;
+        //ctx.setLineDash([5, 15]);
         ctx.stroke();
         ctx.shadowBlur = 10;
         ctx.shadowColor = this.color;
