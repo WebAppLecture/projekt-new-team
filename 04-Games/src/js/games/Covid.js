@@ -15,7 +15,7 @@ export class Covid extends GameTemplate {
         // to do: Bug fixing
         // to do: Methoden richtig einteilen
         // to do: Allgemein: Aufräumen
-        // to do: for --
+        // to do: for -- || undifined
         // to do: Enemy types
         this.gameOver = false;
         //this.playerSpeed = 5;
@@ -100,7 +100,7 @@ export class Covid extends GameTemplate {
         let scale = Math.sqrt(dx * dx + dy * dy); //???
         if(this.spawnIntervalBullets > 10)
         {
-            this.bullets.push(new Ball(this.player.x, this.player.y, 10, 10, "#6bd26b", (dx / scale) * 10, (dy / scale) * 10));
+            this.bullets.push(new Ball(this.player.x + 15, this.player.y + 15, 10, 10, "#6bd26b", (dx / scale) * 10, (dy / scale) * 10));
             //console.log(e.x-rect.left);
             //console.log(e.y-rect.top);
             this.spawnIntervalBullets = 0;
@@ -121,7 +121,7 @@ export class Covid extends GameTemplate {
         {
             // Auch andere Ränder betrachen -> Border
             this.bullets[i].update(ctx);
-            if(this.bullets[i].x < 0 || this.bullets[i].x > ctx.canvas.width || this.bullets[i].y < 0 || this.bullets[i].y > ctx.canvas.height)
+            if(this.bullets[i] != undefined && this.bullets[i].x < 0 || this.bullets[i].x > ctx.canvas.width || this.bullets[i].y < 0 || this.bullets[i].y > ctx.canvas.height)
             {
                 this.bullets.splice(i, 1);
             }
@@ -146,7 +146,7 @@ export class Covid extends GameTemplate {
             }
             for(let j = 0; j < this.walls.length; j++)
             {
-                if(GameObject.rectangleCollision(this.walls[j], this.bullets[i])) {
+                if(this.bullets[i] != undefined && GameObject.rectangleCollision(this.walls[j], this.bullets[i])) {
                     this.bullets.splice(i, 1);
                     //this.walls.splice(j, 1);
                 }
@@ -246,6 +246,10 @@ export class Covid extends GameTemplate {
         for(let i = 0; i < this.enemies.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
         {
             this.enemies[i].update(ctx);
+            if(this.enemies[i].hit === true)
+            {
+                this.lives--;
+            }
             //this.enemies[i].borderCollision(ctx);
             for(let j = 0; j < this.enemies.length; j++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
             {
@@ -265,8 +269,8 @@ export class Covid extends GameTemplate {
                     y1 = this.enemies[i].y;
                     x2 = this.enemies[j].x;
                     y2 = this.enemies[j].y;
-                    this.enemies[i].vx = 0;
-                    this.enemies[i].vy = 0;
+                    this.enemies[0].vx = 0;
+                    this.enemies[0].vy = 0;
                     this.enemies[j].vx = 0;
                     this.enemies[j].vy = 0;
                     //this.enemies[i].vx = -this.enemies[i].vx;
@@ -428,10 +432,10 @@ export class Covid extends GameTemplate {
 
     spawnEnemy()
     {
-        this.enemies.push(new Enemy(50, 250, this.player, 1,"6bd26b", 15, 0, 2 * Math.PI, false, 1));
-        this.enemies.push(new Enemy(350, 250, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
-        this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
-        this.enemies.push(new Enemy(200, 550, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 1));
+        this.enemies.push(new Enemy(50, 250, this.player, 0,"6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls));
+        this.enemies.push(new Enemy(350, 250, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls));
+        this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls));
+        this.enemies.push(new Enemy(200, 550, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls));
     }
 
     drawPoints(ctx) {
