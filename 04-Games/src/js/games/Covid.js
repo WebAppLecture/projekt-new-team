@@ -80,9 +80,9 @@ export class Covid extends GameTemplate {
         this.checkWalls();
         this.drawPoints(ctx);
         this.checkEnemies(ctx);
-        ctx.font = "30px Verdana";
+        //ctx.font = "30px Verdana";
         //ctx.fillStyle = "#000000";
-        ctx.fillText(this.lives, this.player.x, this.player.y);
+        //ctx.fillText(this.lives, this.player.x - this.player.width/2, this.player.y - this.player.height/2);
         if(this.enemies.length === 0)
         {
             this.spawnEnemy();
@@ -94,6 +94,8 @@ export class Covid extends GameTemplate {
 
     draw(ctx) 
     {
+        ctx.font = "30px Verdana";
+        ctx.fillText(this.lives, this.player.x - this.player.width/2, this.player.y - this.player.height/2);
         this.player.draw(ctx);
         this.bullets.forEach(bullets => bullets.draw(ctx));
         this.stones.forEach(stones => stones.draw(ctx));
@@ -211,34 +213,34 @@ export class Covid extends GameTemplate {
                 // to do : add pitch 
                 console.log(pitch)
                 //console.log(this.walls[index].x + 40)
-                if(playerQuadr[0] > wallQuadr[0] )// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
+                if(playerQuadr[0] > wallQuadr[0])// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
                 {
                     //right
                     let yRight = this.player.y;
                     console.log("right");
                     //console.log(this.player.x)
                     //console.log(this.walls[index].x)
-                    this.player.x = this.player.x -this.player.vx;//this.walls[index].x + 50;
+                    this.player.x = this.walls[index].x + 50;//this.player.vx;//this.walls[index].x + 50;
                 }
-                else if(playerQuadr[0] < wallQuadr[0] )// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
+                else if(playerQuadr[0] < wallQuadr[0])// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
                 {
                     //left
                     console.log("left");
-                    this.player.x = this.walls[index].x - 30;
+                    this.player.x = this.walls[index].x - 30;//this.player.vy;//this.walls[index].x - 30;
                 }
-                else if(playerQuadr[1] > wallQuadr[1] )// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
+                else if(playerQuadr[1] > wallQuadr[1])// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
                 {
                     //under
                     console.log("under");
-                    this.player.y = this.walls[index].y + 50;
+                    this.player.y = this.walls[index].y + 50;//this.player.vy;//this.walls[index].y + 50;
                 }
-                else if(playerQuadr[1] < wallQuadr[1]  )// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
+                else if(playerQuadr[1] < wallQuadr[1])// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
                 {
                     //over
                     console.log("over");
                     //console.log(this.player.y)
                     //console.log(this.walls[index].y)
-                    this.player.y = this.walls[index].y - 30;
+                    this.player.y -= this.player.vy;//this.player.vy;//this.walls[index].y - 30;
                 }
                 
             }
@@ -303,6 +305,7 @@ export class Covid extends GameTemplate {
     buildMap() 
     {
         this.walls.splice(0, this.walls.length);
+        this.bullets.splice(0, this.bullets.length);
         let wallPostition = [];
         let map = Math.round(Math.random() * 5);
         // 0 -> No Obstacle | 1 -> Obstacle
@@ -360,8 +363,8 @@ export class Covid extends GameTemplate {
                         0, 1, 1, 0, 0, 1, 1, 0,       
                         0, 1, 0, 0, 0, 0, 1, 0,  
                         0, 0, 0, 1, 1, 0, 0, 0,  
-                        0, 0, 1, 1, 1, 1, 0, 0,  
-                        0, 0, 1, 1, 1, 1, 0, 0,  
+                        0, 0, 1, 0, 0, 1, 0, 0,  
+                        0, 0, 1, 0, 0, 1, 0, 0,  
                         0, 0, 0, 1, 1, 0, 0, 0,  
                         0, 1, 0, 0, 0, 0, 1, 0, 
                         0, 1, 1, 0, 0, 1, 1, 0, 
