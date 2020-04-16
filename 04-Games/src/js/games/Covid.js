@@ -57,25 +57,35 @@ export class Covid extends GameTemplate {
         };
     }
 
+    set lives(value) {
+        this.__lives = value * 1;
+        if(this.__lives <= 0) {
+            this.gameOver = true;
+        }
+    }
+
+    get lives() {
+        return this.__lives * 1;
+    }
+
     update(ctx) // einmal pro frame
     {
         this.player.update(ctx);
         this.checkBullets(ctx);
-        //this.checkStones(ctx);
+        //this.checkStones(ctx)
+        this.checkWalls();
+        this.drawPoints(ctx);
         this.checkEnemies(ctx);
         ctx.font = "30px Verdana";
         //ctx.fillStyle = "#000000";
         ctx.fillText(this.lives, this.player.x, this.player.y);
-        if(this.lives === 0)
-        {
-            this.gameOver = true;
-        }
         if(this.enemies.length === 0)
         {
             this.spawnEnemy();
             this.buildMap();
         }
         //console.log(this.findQuadrant(315,209)[0]);
+
     }
 
     draw(ctx) 
@@ -84,9 +94,7 @@ export class Covid extends GameTemplate {
         this.bullets.forEach(bullets => bullets.draw(ctx));
         this.stones.forEach(stones => stones.draw(ctx));
         this.walls.forEach(walls => walls.draw(ctx));
-        this.enemies.forEach(enemies => enemies.draw(ctx));
-        this.checkWalls();
-        this.drawPoints(ctx);
+        this.enemies.forEach(enemies => enemies.draw(ctx));   
     }
 
     shoot(e)
@@ -117,15 +125,15 @@ export class Covid extends GameTemplate {
         {
             this.spawnIntervalBullets = this.spawnIntervalBullets + 1;
         }
-        for(let i = 0; i < this.bullets.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
+        for(let i = this.bullets.length - 1; i >= 0; i--) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
         {
             // Auch andere Ränder betrachen -> Border
             this.bullets[i].update(ctx);
-            if(this.bullets[i] != undefined && this.bullets[i].x < 0 || this.bullets[i].x > ctx.canvas.width || this.bullets[i].y < 0 || this.bullets[i].y > ctx.canvas.height)
+            if(this.bullets[i].x < 0 || this.bullets[i].x > ctx.canvas.width || this.bullets[i].y < 0 || this.bullets[i].y > ctx.canvas.height)
             {
                 this.bullets.splice(i, 1);
             }
-            for(let j = 0; j < this.stones.length; j++)
+            for(let j = this.stones.length - 1; j >= 0; j--)
             {
                 /*if(this.bullets[i].x === this.stones[j].x && this.bullets[i].y === this.stones[j].y)
                 {
@@ -245,62 +253,19 @@ export class Covid extends GameTemplate {
         let set = false;
         for(let i = 0; i < this.enemies.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
         {
-            this.enemies[i].update(ctx);
+            
             if(this.enemies[i].hit === true)
             {
                 this.lives--;
             }
-            //this.enemies[i].borderCollision(ctx);
             for(let j = 0; j < this.enemies.length; j++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente -> i--
             {
-                let dx = this.enemies[i].x - this.enemies[j].x;
-                let dy = this.enemies[i].y - this.enemies[j].y;
-                let x1;
-                let y1;
-                let x2;
-                let y2;
-                let scale1 = Math.sqrt(this.enemies[i].vx * this.enemies[i].vx + this.enemies[i].vy * this.enemies[i].vy);
-                let scale2 = Math.sqrt(this.enemies[j].vx * this.enemies[j].vx + this.enemies[j].vy * this.enemies[j].vy);
-                let scale = Math.sqrt(dx * dx + dy * dy);
                 if(i != j && Enemy.criclecricleCollision(this.enemies[i], this.enemies[j]) && set === false) { // warum nicht while
                     console.log("Treffer");
-                    set = true;
-                    x1 = this.enemies[i].x;
-                    y1 = this.enemies[i].y;
-                    x2 = this.enemies[j].x;
-                    y2 = this.enemies[j].y;
-                    this.enemies[0].vx = 0;
-                    this.enemies[0].vy = 0;
-                    this.enemies[j].vx = 0;
-                    this.enemies[j].vy = 0;
-                    //this.enemies[i].vx = -this.enemies[i].vx;
-                    /*this.enemies[i].vx = this.enemies[i].vx;
-                    this.enemies[i].vy = -this.enemies[i].vy;
-                    this.enemies[j].vx = this.enemies[j].vx;
-                    this.enemies[j].vy = -this.enemies[j].vy;*/
-                    /*this.enemies[i].x = this.enemies[j] + dx;
-                    this.enemies[i].y = this.enemies[j] + dy;
-                    this.enemies[j].x = this.enemies[i] + dx;
-                    this.enemies[j].y = this.enemies[i] + dy;*/ 
-                    //this.enemies[i].boolvar = false;
-                    //this.enemies[j].boolvar = false;
-                    /*this.enemies[i].vx = 0;
-                    this.enemies[i].vy = -3;*/
-                    /*this.enemies[j].vx = -1 * this.enemies[j].vx;
-                    /*this.enemies[j].vy = -1 * this.enemies[j].vy;
-                    /*this.enemies[i].x = (dx / scale) * 
-                    this.*/
-                    /*x1 = this.enemies[i].x;
-                    y1 = this.enemies[i].y;
-                    x2 = this.enemies[j].x;
-                    y2 = this.enemies[j].y;*/
+                    Enemy.handleEnemyCollision(this.player, this.enemies[i], this.enemies[j]);
                 }
-                if(i != j && !Enemy.criclecricleCollision(this.enemies[i], this.enemies[j]))
-                {
-                    set = false;
-                }
-                //console.log(Enemy.criclecricleCollision(this.enemies[i], this.enemies[j]));
             }
+            this.enemies[i].update(ctx);
             // to do: Collision Reatiction
             for(let k = 0; k < this.walls.length; k++) 
             {
