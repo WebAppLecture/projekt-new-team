@@ -17,6 +17,10 @@ export class Covid extends GameTemplate {
         // to do: Allgemein: Aufräumen
         // to do: for -- || undifined
         // to do: Enemy types
+        // to do: wall gliches
+        // to do: healign
+        // to do: points draw
+        // to do: spawnpont
         this.gameOver = false;
         //this.playerSpeed = 5;
         //ctx.canvas.height;
@@ -206,7 +210,7 @@ export class Covid extends GameTemplate {
                     console.log("right");
                     //console.log(this.player.x)
                     //console.log(this.walls[index].x)
-                    this.player.x = this.walls[index].x + 50;
+                    this.player.x = this.player.x -this.player.vx;//this.walls[index].x + 50;
                 }
                 else if(playerQuadr[0] < wallQuadr[0] )// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
                 {
@@ -273,6 +277,8 @@ export class Covid extends GameTemplate {
                     this.enemies[0].vy = 0;
                     this.enemies[j].vx = 0;
                     this.enemies[j].vy = 0;
+                    this.enemies[i].x = this.enemies[i].x - vx;
+                    this.enemies[i].y = this.enemies[i].y - vy;
                     //this.enemies[i].vx = -this.enemies[i].vx;
                     /*this.enemies[i].vx = this.enemies[i].vx;
                     this.enemies[i].vy = -this.enemies[i].vy;
