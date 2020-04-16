@@ -246,4 +246,22 @@ export class Enemy {
             return false;
         }
     }
+
+    static handleEnemyCollision(player, enemy1, enemy2) {
+        let dx1 = Math.abs(enemy1.x - player.x),
+            dy1 = Math.abs(enemy1.y - player.y),
+            dx2 = Math.abs(enemy2.x - player.x),
+            dy2 = Math.abs(enemy2.y - player.y),
+            d1 = Math.sqrt(dx1 ** 2 + dy1 ** 2),
+            d2 = Math.sqrt(dx2 ** 2 + dy2 ** 2);
+    
+        if(d1 > d2) {
+            enemy1.x -= enemy1.vx;
+            enemy1.y -= enemy1.vy;
+        } else {
+            enemy2.x -= enemy2.vx;
+            enemy2.y -= enemy2.vy;
+        }
+    }
+
 }
