@@ -4,7 +4,7 @@ SS2020
 
 Leitung: Dr. Friedrich Wünsch, Louis Ritzkowski
 
-# Projektname #
+# Covid #
 
 Manuel Mustermann, Marta Musterfrau, Mo Mustermensch
 
