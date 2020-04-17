@@ -3,7 +3,7 @@ import { Covid } from "./games/Covid.js"
 
 export class Enemy {
 
-    constructor(x, y, target, type, color, radius, startAngle, endAngle, anticlockwise, speed, lives, walls) {
+    constructor(x, y, target, type, color, radius, startAngle, endAngle, anticlockwise, speed, lives, walls, enemies) {
         //super (x, y, 0, 0, color);
         //super(x, y, 0, 0, color);
         this.x = x;
@@ -23,6 +23,7 @@ export class Enemy {
         this.spawnIntervalBullets = 0;
         this.hit = false;
         this.walls = walls;
+        this.enemies = enemies;
         //this.boolvar = true;
     }
 
@@ -166,6 +167,14 @@ export class Enemy {
                     //this.walls.splice(j, 1);
                 }
             }
+            /*for(let k = 0; k < this.enemies.length; k++)
+            {
+                if(this.bullets[i] != undefined && this.enemies[k] != undefined && Enemy.criclerectngleCollision(this.bullets[i], this.enemies[k]))
+                {
+                    this.bullets.splice(i, 1);
+                    this.enemies.splice(k, 1);
+                }
+            }*/
             /*this.stones.forEach(this.stones => {
                 if(GameObject.rectangleCollision(this.bullets[i], paddle)) {
                     this.handleHit(ctx, paddle);
@@ -212,23 +221,28 @@ export class Enemy {
         let rh = rect1.height;
         let testX = cx;
         let testY = cy;
+        let edge;
 
         // which edge is closest?
         if (cx < rx) 
         {
             testX = rx;
+            edge = "left";
         }   // test left edge
         else if (cx > rx+rw) 
         {
             testX = rx+rw;   
+            edge = "right";
         }   // right edge
         if (cy < ry)         
         {
             testY = ry;  
+            edge = "top";
         }   // top edge
         else if (cy > ry+rh) 
         {
             testY = ry+rh;
+            edge = "bottom";
         }   // bottom edge
 
         // get distance from closest edges
@@ -239,11 +253,11 @@ export class Enemy {
         // if the distance is less than the radius, collision!
         if (distance <= circ1.radius) 
         {
-            return true;
+            return [true, edge];
         }
         else 
         {
-            return false;
+            return [false, edge];
         }
     }
 

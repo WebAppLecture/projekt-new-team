@@ -46,6 +46,10 @@ export class Covid extends GameTemplate {
         this.wallsSize = 50;
         this.spawnEnemy();
         this.buildMap();
+        this.playerSpawnX = 185;
+        this.playerSpawnY = 235;
+        this.pause = 0;
+        this.round = 1;
         //this.player.addEventListener("mousedown", event => this.shoot(event));
         //this.screen =  
     }
@@ -57,7 +61,7 @@ export class Covid extends GameTemplate {
             "down" : this.player.down.bind(this.player), 
             "left" : this.player.left.bind(this.player), 
             "right" : this.player.right.bind(this.player), 
-            "primary" : this.shoot.bind(this),
+            //"primary" : this.shoot.bind(this),
         };
     }
 
@@ -74,19 +78,37 @@ export class Covid extends GameTemplate {
 
     update(ctx) // einmal pro frame
     {
-        this.player.update(ctx);
-        this.checkBullets(ctx);
-        //this.checkStones(ctx)
-        this.checkWalls();
-        this.drawPoints(ctx);
-        this.checkEnemies(ctx);
-        //ctx.font = "30px Verdana";
-        //ctx.fillStyle = "#000000";
-        //ctx.fillText(this.lives, this.player.x - this.player.width/2, this.player.y - this.player.height/2);
-        if(this.enemies.length === 0)
+        if(this.pause == 0)
         {
-            this.spawnEnemy();
-            this.buildMap();
+            this.player.width = 30;
+            this.player.height = 30;
+            this.player.update(ctx);
+            this.checkBullets(ctx);
+            //this.checkStones(ctx)
+            this.checkWalls();
+            this.drawPoints(ctx);
+            //this.checkEnemies(ctx);
+            //ctx.font = "30px Verdana";
+            //ctx.fillStyle = "#000000";
+            //ctx.fillText(this.lives, this.player.x - this.player.width/2, this.player.y - this.player.height/2);
+            if(this.enemies.length === 0)
+            {
+                this.pause = 50;
+                this.spawnEnemy();
+                this.buildMap();
+                this.round++;
+            }
+        }
+        else
+        {
+            this.pause--;
+            /*this.player.width = this.player.width * ((this.pause+1) / 50);
+            this.player.height = this.player.height * ((this.pause+1) / 50);*/
+            /*ctx.arc(this.playerSpawnX, this.playerSpawnY, 30, 30, 0, 2*Math.PI, false);
+            ctx.fillStyle = this.color;*/
+            /*ctx.font = "30px Verdana";
+            ctx.fillStyle = "#006600";
+            ctx.fillText(this.round, this.ctx.width / 2, this.ctx.height / 2);*/
         }
         //console.log(this.findQuadrant(315,209)[0]);
 
@@ -94,13 +116,14 @@ export class Covid extends GameTemplate {
 
     draw(ctx) 
     {
-        ctx.font = "30px Verdana";
-        ctx.fillText(this.lives, this.player.x - this.player.width/2, this.player.y - this.player.height/2);
         this.player.draw(ctx);
         this.bullets.forEach(bullets => bullets.draw(ctx));
         this.stones.forEach(stones => stones.draw(ctx));
         this.walls.forEach(walls => walls.draw(ctx));
         this.enemies.forEach(enemies => enemies.draw(ctx));   
+        ctx.font = "30px Verdana";
+        ctx.fillStyle = "#006600";
+        ctx.fillText(this.lives, this.player.x + this.player.width/2, this.player.y + this.player.height/2 + 2.75);
     }
 
     shoot(e)
@@ -197,47 +220,55 @@ export class Covid extends GameTemplate {
 
     checkWalls() //besser Obstacles -> Kugelhitboxen
     {
-        let playerQuadr = this.findQuadrant(this.player.x, this.player.y, 40);
+        let playerQuadr = this.findQuadrant(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 2), 40);
         for(let i = 0; i < this.walls.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente
         {
             let dx = this.player.x - this.walls[i].x;
             let dy = this.player.y - this.walls[i].y;
             let pitch = dy / dx;
             if(GameObject.rectangleCollision(this.player, this.walls[i])) {
-                let wallQuadr = this.findQuadrant(this.walls[i].x, this.walls[i].y, 40);
+                let wallQuadr = this.findQuadrant(this.walls[i].x + (this.walls[i].width / 2), this.walls[i].y + (this.walls[i].height / 2), 40);
                 //console.log("Hallo");
                 let index =  i;
                 // Problem: Wenn collision dann wird erst das oberste überprüft alternativ: vx und vy >< 0
                 // Nicht alle Bedingung nötig
                 // < || <=
                 // to do : add pitch 
-                console.log(pitch)
+                //console.log(pitch)
                 //console.log(this.walls[index].x + 40)
-                if(playerQuadr[0] > wallQuadr[0])// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
+                if(playerQuadr[0] > wallQuadr[0] || this.player.x + (this.player.width / 2) > this.walls[i].x + (this.walls[i].width) + (this.player.width / 2))// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
                 {
                     //right
                     let yRight = this.player.y;
                     console.log("right");
                     //console.log(this.player.x)
                     //console.log(this.walls[index].x)
-                    this.player.x = this.walls[index].x + 50;//this.player.vx;//this.walls[index].x + 50;
+                    console.log("playerQuadr");
+                    console.log(playerQuadr);
+                    this.player.x -= this.player.vx;//this.walls[index].x + 50;
                 }
-                else if(playerQuadr[0] < wallQuadr[0])// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
+                else if(playerQuadr[0] < wallQuadr[0] || this.player.x + (this.player.width / 2) < this.walls[i].x - (this.player.width / 2))// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
                 {
                     //left
                     console.log("left");
-                    this.player.x = this.walls[index].x - 30;//this.player.vy;//this.walls[index].x - 30;
+                    console.log("playerQuadr");
+                    console.log(playerQuadr);
+                    this.player.x -= this.player.vx;//this.walls[index].x - 30;
                 }
-                else if(playerQuadr[1] > wallQuadr[1])// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
+                else if(playerQuadr[1] > wallQuadr[1] || this.player.y + (this.player.height / 2) > this.walls[i].y + (this.walls[i].height) + (this.player.height / 2))// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
                 {
                     //under
                     console.log("under");
-                    this.player.y = this.walls[index].y + 50;//this.player.vy;//this.walls[index].y + 50;
+                    console.log("playerQuadr");
+                    console.log(playerQuadr);
+                    this.player.y += this.player.vy;//this.walls[index].y + 50;
                 }
-                else if(playerQuadr[1] < wallQuadr[1])// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
+                else if(playerQuadr[1] < wallQuadr[1] || this.player.y + (this.player.height / 2) < this.walls[i].y - (this.player.height / 2))// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
                 {
                     //over
                     console.log("over");
+                    console.log("playerQuadr");
+                    console.log(playerQuadr);
                     //console.log(this.player.y)
                     //console.log(this.walls[index].y)
                     this.player.y -= this.player.vy;//this.player.vy;//this.walls[index].y - 30;
@@ -276,13 +307,13 @@ export class Covid extends GameTemplate {
             for(let k = 0; k < this.walls.length; k++) 
             {
                 //console.log("Wand");
-                if(Enemy.criclerectngleCollision(this.walls[k], this.enemies[i]))
+                if(Enemy.criclerectngleCollision(this.walls[k], this.enemies[i])[0])
                 {
                     console.log("Wand");
                     // to do: Pathfinding
                 }
             }
-            if(Enemy.criclerectngleCollision(this.player, this.enemies[i]))
+            if(Enemy.criclerectngleCollision(this.player, this.enemies[i])[0])
             {
                 {
                     this.lives--;
@@ -291,7 +322,7 @@ export class Covid extends GameTemplate {
             }
             for(let p = 0; p < this.bullets.length; p++) 
             {
-                if(Enemy.criclerectngleCollision(this.bullets[p], this.enemies[i]))
+                if(Enemy.criclerectngleCollision(this.bullets[p], this.enemies[i])[0])
                 {
                     this.points++;
                     this.enemies.splice(i, 1);
@@ -362,10 +393,10 @@ export class Covid extends GameTemplate {
         this.maps[5] = [0, 0, 0, 0, 0, 0, 0, 0, 
                         0, 1, 1, 0, 0, 1, 1, 0,       
                         0, 1, 0, 0, 0, 0, 1, 0,  
-                        0, 0, 0, 1, 1, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
                         0, 0, 1, 0, 0, 1, 0, 0,  
                         0, 0, 1, 0, 0, 1, 0, 0,  
-                        0, 0, 0, 1, 1, 0, 0, 0,  
+                        0, 0, 0, 0, 0, 0, 0, 0,  
                         0, 1, 0, 0, 0, 0, 1, 0, 
                         0, 1, 1, 0, 0, 1, 1, 0, 
                         0, 0, 0, 0, 0, 0, 0, 0]
@@ -393,6 +424,33 @@ export class Covid extends GameTemplate {
                 wallPostition.push([this.wallsSize*xPos, this.wallsSize*yPos]);
             }
         }
+        switch(map)
+        {
+            case 0 :
+                this.player.x = 185;
+                this.player.y = 235;
+                break;
+            case 1 :
+                this.player.x = 185;
+                this.player.y = 235;
+                break;
+            case 2 :
+                this.player.x = 285;
+                this.player.y = 135;
+                break;
+            case 3 :
+                this.player.x = 185;
+                this.player.y = 235; 
+                break;
+            case 4 :
+                this.player.x = 185;
+                this.player.y = 235;
+                break;
+            case 5 :
+                this.player.x = 185;
+                this.player.y = 235;
+                break;
+        }
         //let wallPostition = [[50,50], [50,410], [310,50], [310,410]];
         for(let j = 0; j < wallPostition.length; j++)
         {
@@ -404,10 +462,20 @@ export class Covid extends GameTemplate {
 
     spawnEnemy()
     {
-        this.enemies.push(new Enemy(50, 250, this.player, 0,"6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls));
-        this.enemies.push(new Enemy(350, 250, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls));
-        this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls));
-        this.enemies.push(new Enemy(200, 550, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls));
+        if(this.points < 12)
+        {
+            this.enemies.push(new Enemy(50, 250, this.player, 0,"6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(350, 250, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 50, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 450, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+        }
+        else if(this.points >= 12)
+        {
+            this.enemies.push(new Enemy(50, 250, this.player, 0,"6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(350, 250, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 450, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls, this.enemies));
+        }
     }
 
     drawPoints(ctx) {
