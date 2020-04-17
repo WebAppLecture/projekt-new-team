@@ -220,14 +220,14 @@ export class Covid extends GameTemplate {
 
     checkWalls() //besser Obstacles -> Kugelhitboxen
     {
-        let playerQuadr = this.findQuadrant(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 2), 40);
+        let playerQuadr = this.findQuadrant(this.player.x + (this.player.width / 2), this.player.y + (this.player.height / 2), 50);
         for(let i = 0; i < this.walls.length; i++) // for each bessser weil sonst abfrage auf bereits gelöschte elemente
         {
             let dx = this.player.x - this.walls[i].x;
             let dy = this.player.y - this.walls[i].y;
             let pitch = dy / dx;
             if(GameObject.rectangleCollision(this.player, this.walls[i])) {
-                let wallQuadr = this.findQuadrant(this.walls[i].x + (this.walls[i].width / 2), this.walls[i].y + (this.walls[i].height / 2), 40);
+                let wallQuadr = this.findQuadrant(this.walls[i].x + (this.walls[i].width / 2), this.walls[i].y + (this.walls[i].height / 2), 50);
                 //console.log("Hallo");
                 let index =  i;
                 // Problem: Wenn collision dann wird erst das oberste überprüft alternativ: vx und vy >< 0
@@ -236,7 +236,7 @@ export class Covid extends GameTemplate {
                 // to do : add pitch 
                 //console.log(pitch)
                 //console.log(this.walls[index].x + 40)
-                if(playerQuadr[0] > wallQuadr[0] || this.player.x + (this.player.width / 2) > this.walls[i].x + (this.walls[i].width) + (this.player.width / 2))// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
+                if(playerQuadr[0] > wallQuadr[0] && this.player.x + (this.player.width / 2) < this.walls[i].x + (this.walls[i].width) + (this.player.width / 2) && this.player.vx < 0)// this.player.x < this.walls[index].x  + 40 && this.player.x > this.walls[index].x && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx < 0)// && pitch >= -0.5 && pitch <= 0.5) //this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x)
                 {
                     //right
                     let yRight = this.player.y;
@@ -247,7 +247,7 @@ export class Covid extends GameTemplate {
                     console.log(playerQuadr);
                     this.player.x -= this.player.vx;//this.walls[index].x + 50;
                 }
-                else if(playerQuadr[0] < wallQuadr[0] || this.player.x + (this.player.width / 2) < this.walls[i].x - (this.player.width / 2))// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
+                else if(playerQuadr[0] < wallQuadr[0] && this.player.x + (this.player.width / 2) > this.walls[i].x - (this.player.width / 2)  && this.player.vx > 0)// this.player.x > this.walls[index].x - 30 && this.player.y < this.walls[index].y + 40 && this.player.y > this.walls[index].y - 30 && this.player.vx > 0) //this.player.x > this.walls[index].x)
                 {
                     //left
                     console.log("left");
@@ -255,15 +255,15 @@ export class Covid extends GameTemplate {
                     console.log(playerQuadr);
                     this.player.x -= this.player.vx;//this.walls[index].x - 30;
                 }
-                else if(playerQuadr[1] > wallQuadr[1] || this.player.y + (this.player.height / 2) > this.walls[i].y + (this.walls[i].height) + (this.player.height / 2))// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
+                else if(playerQuadr[1] > wallQuadr[1] && this.player.y + (this.player.height / 2) < this.walls[i].y + (this.walls[i].height) + (this.player.height / 2))// this.player.y < this.walls[index].y + 40 && this.player.x < this.walls[index].x + 40 && this.player.x > this.walls[index].x - 30 && this.player.vy < 0 )
                 {
                     //under
                     console.log("under");
                     console.log("playerQuadr");
                     console.log(playerQuadr);
-                    this.player.y += this.player.vy;//this.walls[index].y + 50;
+                    this.player.y -= this.player.vy;//this.walls[index].y + 50;
                 }
-                else if(playerQuadr[1] < wallQuadr[1] || this.player.y + (this.player.height / 2) < this.walls[i].y - (this.player.height / 2))// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
+                else if(playerQuadr[1] < wallQuadr[1] && this.player.y + (this.player.height / 2) > this.walls[i].y - (this.player.height / 2))// this.player.y > this.walls[index].y - 30 && this.player.vy > 0)
                 {
                     //over
                     console.log("over");
