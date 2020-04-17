@@ -87,7 +87,7 @@ export class Covid extends GameTemplate {
             //this.checkStones(ctx)
             this.checkWalls();
             this.drawPoints(ctx);
-            //this.checkEnemies(ctx);
+            this.checkEnemies(ctx);
             //ctx.font = "30px Verdana";
             //ctx.fillStyle = "#000000";
             //ctx.fillText(this.lives, this.player.x - this.player.width/2, this.player.y - this.player.height/2);
@@ -316,7 +316,7 @@ export class Covid extends GameTemplate {
             if(Enemy.criclerectngleCollision(this.player, this.enemies[i])[0])
             {
                 {
-                    this.lives--;
+                    this.lives -= this.enemies[i].lives;
                     this.enemies.splice(i, 1);
                 }
             }
@@ -325,8 +325,14 @@ export class Covid extends GameTemplate {
                 if(Enemy.criclerectngleCollision(this.bullets[p], this.enemies[i])[0])
                 {
                     this.points++;
-                    this.enemies.splice(i, 1);
                     this.bullets.splice(p, 1);
+                    this.enemies[i].lives--;
+                    console.log("Lives");
+                    console.log(this.enemies[i].lives);
+                    if(this.enemies[i].lives === 0)
+                    {
+                        this.enemies.splice(i, 1);
+                    }
                     // to do: spawn new enemies bzw. map
                 }
             }
@@ -468,6 +474,13 @@ export class Covid extends GameTemplate {
             this.enemies.push(new Enemy(350, 250, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
             this.enemies.push(new Enemy(200, 50, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
             this.enemies.push(new Enemy(200, 450, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+        }
+        else if(this.points >= 24)
+        {
+            this.enemies.push(new Enemy(50, 250, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(350, 250, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 50, this.player, 2, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 3, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 450, this.player, 2, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 3, this.walls, this.enemies));
         }
         else if(this.points >= 12)
         {

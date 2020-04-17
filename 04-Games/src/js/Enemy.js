@@ -98,6 +98,20 @@ export class Enemy {
             ctx.shadowBlur = 10;
             ctx.shadowColor = this.color;
         }
+        else if(this.type === 2)
+        {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, this.radius, this.startAngle, this.endAngle, this.anticlockwise)
+            ctx.fillStyle = this.color;
+            //ctx.fill();
+            //ctx.setLineDash([5, 15]);
+            ctx.stroke();
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+            ctx.font = "30px Verdana";
+            ctx.fillStyle = this.color;
+            ctx.fillText(this.lives, this.x, this.y + 2);
+        }
         this.bullets.forEach(bullets => bullets.draw(ctx));
     }
 
@@ -261,6 +275,7 @@ export class Enemy {
         }
     }
 
+    //to do: bessere Collisionen
     static handleEnemyCollision(player, enemy1, enemy2) {
         let dx1 = Math.abs(enemy1.x - player.x),
             dy1 = Math.abs(enemy1.y - player.y),
