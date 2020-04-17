@@ -479,15 +479,15 @@ export class Covid extends GameTemplate {
         {
             this.enemies.push(new Enemy(50, 250, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 1, this.walls, this.enemies));
             this.enemies.push(new Enemy(350, 250, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 1, this.walls, this.enemies));
-            this.enemies.push(new Enemy(200, 50, this.player, 2, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
-            this.enemies.push(new Enemy(200, 450, this.player, 2, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 50, this.player, 2, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 3, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 450, this.player, 2, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 3, this.walls, this.enemies));
         }
         else if(this.points >= 12)
         {
             this.enemies.push(new Enemy(50, 250, this.player, 0,"6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
             this.enemies.push(new Enemy(350, 250, this.player, 0, "6bd26b", 15, 0, 2 * Math.PI, false, 1, 1, this.walls, this.enemies));
-            this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls, this.enemies));
-            this.enemies.push(new Enemy(200, 450, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 3, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 50, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 1, this.walls, this.enemies));
+            this.enemies.push(new Enemy(200, 450, this.player, 1, "6bd26b", 15, 0, 2 * Math.PI, false, 0.5, 1, this.walls, this.enemies));
         }
     }
 
