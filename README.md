@@ -22,6 +22,8 @@ Gegner 3 "Tank": 3 Leben, zieht dem Spieler Anzahl eigener übriger Leben ab
 
 Sind alle Gegner besiegt, startet die nächste Runde. Für jeden Treffer gibt es einen Punkt. Neue Maps können als Matrizen mit 0 -> keine Wand und 1 -> Wand generiert werden. In jeder neuen Runde wird eine neue Map zufällig ausgewählt.
 
+Alle Game Objects sind von einer eigenen Klasse und werden von der update-Methode in Covid.js mit jeweils einer eigenen checker-Methode überprüft.
+
 ### Steuerung (Falls Spiel) ###
 
 W/A/S/D + Zielen mit Mauszeiger, Schießen mit linker Maustaste
