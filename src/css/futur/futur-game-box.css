@@ -1,0 +1,96 @@
+body {
+    font-family: 'Keania One', cursive;
+    background-color:#269;
+    background-image: linear-gradient(white 2px, transparent 2px),
+    linear-gradient(90deg, white 2px, transparent 2px),
+    linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position:-2px -2px, -2px -2px, -1px -1px, -1px -1px;
+}
+
+.gameBox {
+    border-radius: 4vh;
+
+    background: linear-gradient(to right bottom, var(--shadow), rgb(160, 76, 76) 70%, 
+  hsla(118,100%,63%,1));
+    box-shadow: -.5vh -.5vh 2vh -.2vh rgb(49, 44, 42) inset,
+        .6vh .6vh .7vh .2vh rgb(49, 44, 42),
+        0 0 1.5vh -.5vh rgb(49, 44, 42);
+}
+
+.logo,
+.accent {
+    background-color: var(--green);
+    background: linear-gradient(to right, var(--green), var(--dark-purple));
+
+    color: transparent;
+    font-family: monospace;
+
+    font-weight: bold;
+    text-shadow: .15vh .15vh .3vh var(--orange-trans);
+    -webkit-background-clip: text;
+       -moz-background-clip: text;
+            background-clip: text;
+}
+
+.accent:before {
+    font-size: 10vh;
+    content: "___ .";
+}
+
+.screen {
+    /*border-radius: 1.5vh;*/
+    margin: 0 3vh 0vh 3vh;
+    box-shadow: 0 0 .8vh .2vh var(--dark-purple) inset, .3vh .9vh 2vh 0
+  hsla(118,100%,63%,.6), .6vh .6vh .9vh 0 var(--orange-trans), -.4vh -.7vh 1.4vh 0 
+    var(--dark-purple-trans);
+    /*box-shadow: 0 0 .8vh .2vh var(--dark-purple) inset,
+        .7vh .6vh .9vh 0 var(--orange-trans),
+        -.4vh -.7vh 1.4vh 0 var(--dark-purple-trans);
+    /*box-shadow: /*0px 8px 10px gray inset, 
+        0px 5px 15px black inset;
+        /*10px 8px 15px gray ;*/
+}
+
+.controlbox {
+    margin: 0 0 0 3vh;
+
+    padding: 1vh;
+
+    /*background: #060;
+    color: #484;
+    /*box-shadow: 0 0 1vh .2vh black inset;*/
+    box-shadow: 0px -5px 10px black inset;
+
+    transition: background .5s;
+    /*box-shadow: 0 0 .8vh .2vh var(--dark-purple) inset,
+        .7vh .6vh .9vh 0 var(--orange-trans),
+        -.4vh -.7vh 1.4vh 0 var(--dark-purple-trans);*/
+}
+
+.menu {
+    border: .4vh solid var(--green);
+    box-shadow: 0 0 1vh 0 var(--green),
+        0 0 1vh 0 var(--green) inset;
+}
+
+.menu > ul {
+    padding-inline-start: 0;
+
+    font-family: 'Keania One', cursive;;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 2vh;
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 1vh var(--green);
+
+    border: .4vh solid transparent;
+}
+
+.menu > ul.active {
+    border: .4vh solid var(--green);
+    box-shadow: 0 0 1vh 0 var(--green),
+        0 0 1vh 0 var(--green) inset;
+}

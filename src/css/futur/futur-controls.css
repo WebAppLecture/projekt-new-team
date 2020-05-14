@@ -1,0 +1,126 @@
+.controls > *,
+.skin-change > div {    
+    background-color: rgb(179, 211, 36);
+
+    color: var(--shadow);
+    text-align: center;
+    font-family: 'Keania One', cursive;
+    font-weight: 900; 
+}
+
+.d-pad {
+    top: 62%;
+    left: 29%;
+    border-radius: 25vh;
+
+    line-height: 9.5vh;
+    font-family: 'Keania One', cursive;
+    font-size: 5vh;
+}
+
+.d-pad:active,
+.d-pad:focus {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+    0 0 0 .9vh inset var(--purple-trans);
+    font-size: 9.5vh;
+}
+
+.up {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+        1vh 1vh .5vh .1vh inset var(--button-highlight), 
+        0 0 0 .8vh inset var(--purple-trans);
+}
+
+.right {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+        1vh -1vh .5vh .1vh inset var(--button-highlight), 
+        0 0 0 .8vh inset var(--purple-trans);
+}
+
+.down {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+        -1vh -1vh .5vh .1vh inset var(--button-highlight), 
+        0 0 0 .8vh inset var(--purple-trans);
+}
+
+.left {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+        -1vh 1vh .5vh .1vh inset var(--button-highlight), 
+        0 0 0 .8vh inset var(--purple-trans);
+}
+
+.big-button {   
+    border-radius: 25vh;
+    width: 50px;
+
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+        .4vh .8vh .5vh .1vh inset var(--button-highlight), 
+        0 0 0 .8vh inset var(--purple-trans);
+
+    line-height: 7vh;
+    font-size: 5.5vh;
+}
+
+.reset {
+    border-radius: 1.5vh;
+ 
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+        .4vh .8vh .5vh .1vh inset var(--button-highlight), 
+        0 0 0 .8vh inset var(--purple-trans);
+
+    line-height: 4vh;
+    font-size: 2.3vh;
+}
+
+.big-button:active,
+.reset:active {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+    0 0 0 .9vh inset var(--purple-trans);
+}
+
+.big-button:active {
+    font-size: 5.3vh;
+}
+
+.reset:active {
+    font-size: 2.2vh;
+}
+
+.A {
+    top: 64%;
+    left: 70%;
+    margin-top: 2vh;
+}
+
+.B {
+    top: 67%;
+    left: 70%;
+    margin-top: 8vh;
+}
+
+.skin-change > div {
+    height: 5vh;
+    width: 4vh;
+    margin-right: .5vh;
+
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+    .4vh .8vh .5vh .1vh inset var(--button-highlight), 
+    0 0 0 .8vh inset var(--purple-trans);
+    
+    text-align: center;
+    font-size: 3vh;
+    line-height: 5vh;
+}
+
+.skin-change > div:active {
+    box-shadow: 0 0 .6vh 0 var(--shadow),
+    0 0 0 .9vh inset var(--purple-trans);
+}
+
+.previous {
+    border-radius: 25vh;
+}
+
+.next {
+    border-radius: 25vh;
+}

@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Keania+One&display=swap');
+
+:root {
+    --orange: hsl(32, 100%, 50%);
+    --orange-trans: hsla(32, 100%, 50%, 0.6);
+    --purple: hsl(300, 100%, 25%);
+    --purple-trans: hsla(0, 0%, 0%, 0.4);
+    --dark-purple: hsl(305, 100%, 13%);
+    --dark-purple-trans: hsla(305, 100%, 13%, 0.7);
+    --button-highlight: hsla(118, 100%, 63%, 0.3);
+    --shadow: rgb(0, 0, 0);
+
+    --green: #6bd26b;
+}
