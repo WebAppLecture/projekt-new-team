@@ -1,6 +1,6 @@
 import { GameTemplate } from "./GameTemplate.js"
 import { GameObject, MovableGameObject, Ball, Mode } from "../GameObject.js";
-import { Pong, Paddle } from "../games/Pong.js";
+import { Pong, Paddle } from "./Pong.js";
 
 export class FallingStones extends GameTemplate {
 
