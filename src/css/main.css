@@ -1,3 +1,2 @@
-body {
-    text-align: center;
-}
+@import url("./game-box.css");
+@import url("./controls.css");

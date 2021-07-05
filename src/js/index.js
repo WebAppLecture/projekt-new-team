@@ -1,15 +1,18 @@
-fetch("src/data/data.json")
-    .then(e => e.json())
-    .then(json => {
-        let title = document.createElement("h2"),
-            content = document.createElement("p"),
-            image = document.createElement("img");
+import { GameEngine } from "./GameEngine.js";
+import { SkinChanger } from "./SkinChanger.js";
 
-        title.innerHTML = json.title;
-        content.innerHTML = json.content;
-        image.setAttribute("src", "./src/images/sql magic.jpg");
+window.gameEngine = new GameEngine(
+    document.querySelector(".controls"), 
+    document.querySelector(".screen"),
+    document.querySelector(".menu"));
 
-        document.body.appendChild(title);
-        document.body.appendChild(content);
-        document.body.appendChild(image);
-    });
+
+let skinStyle = document.querySelector("#skin"),
+    skins = ["futur", "gold","peach","basic","win95", "mech"];
+
+window.skinChanger = new SkinChanger(skinStyle, skins, "../css/");
+
+document.querySelector(".next").addEventListener("click", () => skinChanger.next());
+document.querySelector(".previous").addEventListener("click", () => skinChanger.previous());
+
+skinChanger.activeSkin = "futur";
